@@ -1,0 +1,8 @@
+host_vars/
+*.retry
+*.log
+*.opg
+*.swp
+playbooks/test/
+.DS_Store
+ansible.all

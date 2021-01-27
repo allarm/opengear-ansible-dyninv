@@ -1,0 +1,9 @@
+ansible_python_interpreter: /usr/bin/python
+ansible_ssh_user: ssh_user
+
+ftp_ip: 10.20.30.40
+ftp_user: ftp_user 
+ftp_password: ftp_password 
+
+
+dyninv_input_csv: "dyninv_input.csv"

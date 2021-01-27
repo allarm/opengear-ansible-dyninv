@@ -1,0 +1,179 @@
+# all additional info on hosts is in host_vars (untracked in git)
+# IMPORTANT
+# replace '-' with '_'
+#
+# ansible_user variables for different host groups are in /group_vars
+#
+# run `ansible-playbook` with `--ask-pass` parameter to have
+# paramiko ask for the password
+
+
+###############################################################################
+# Local
+###############################################################################
+
+[local]
+localhost ansible_connection=local
+
+
+[upgrade]
+bbb4-nts01.example.org
+[upgrade:vars]
+#upgrade_url='http://ftp.opengear.com/download/releeee/current/4.6.0/im72xx-4.6.0.flash'
+upgrade_url='http://ftp.opengear.com/download/releeee/current/4.6.0/im71xx-4.6.0.flash'
+
+###############################################################################
+# Lab
+###############################################################################
+
+[lab]
+xxx1-nts01.example.org
+xxx1-nts02.example.org upgrade_url='http://ftp.opengear.com/download/releeee/current/4.6.0/im72xx-4.6.0.flash'
+
+###############################################################################
+# Test
+###############################################################################
+
+[test]
+ccc2-nts1.example.org
+
+###############################################################################
+# EMEA
+###############################################################################
+
+[ccc2]
+ccc2-nts[1:3].example.org
+
+[ccc3]
+ccc3-nts0[1:2].example.org
+
+[nnn1]
+nnn1-nts[1:2].example.org
+
+[ooo1]
+ooo1-nts1.example.org
+
+[ppp2]
+ppp2-nts01.example.org
+
+[emea:children]
+ccc2
+ccc3
+nnn1
+ooo1
+ppp2
+
+###############################################################################
+# US
+###############################################################################
+
+[kkk0]
+kkk0-nts0[1:2].example.org
+
+[kkk1]
+#kkk1-nts[01:15].example.org
+kkk1-nts[01:02].example.org
+kkk1-nts03.example.org
+kkk1-nts[04:12].example.org
+kkk1-nts13.example.org
+kkk1-nts14.example.org
+kkk1-nts15.example.org
+
+[kkk3]
+kkk3-nts01.example.org
+
+[kkk7]
+kkk7-nts01.example.org
+
+[kkk9]
+kkk9-nts01.example.org
+
+[jjj1]
+jjj1-nts[1:2].example.org
+
+[iii1]
+iii1-nts[1:2].example.org
+
+[zzz1]
+#zzz1-nts[01:04].example.org
+zzz1-nts01.example.org
+
+[zzz5]
+zzz5-nts01.example.org
+
+[lll1]
+lll1-nts01.example.org
+
+[us:children]
+kkk0
+kkk1
+kkk3
+kkk7
+kkk9
+jjj1
+iii1
+zzz1
+zzz5
+lll1
+
+
+###############################################################################
+# PPPC
+###############################################################################
+
+[ddd2]
+ddd2-nts1.example.org
+
+[bbb3]
+bbb3-nts[1:2].example.org
+
+[eee2]
+eee2-nts01.example.org
+
+[fff2]
+fff2-nts01.example.org
+
+[ggg2]
+ggg2-nts01.example.org upgrade_url='http://ftp.opengear.com/download/releeee/current/4.6.0/im72xx-4.6.0.flash'
+
+[hhh1]
+hhh1-nts01.example.org
+
+[pppc:children]
+ddd2
+bbb3
+eee2
+fff2
+ggg2
+hhh1
+
+
+###############################################################################
+# HRL
+###############################################################################
+
+[aaa2]
+aaa2-nts01.example.org
+
+[bbb4]
+bbb4-nts[01:02].example.org
+
+
+###############################################################################
+# Putting it all together
+###############################################################################
+
+[hrl:children]
+aaa2
+bbb4
+
+[row:children]
+pppc
+emea
+us
+
+
+#[hrl:vars]
+#ansible_user=a_andrey_chertolyas
+#ansible_paramiko_user=a_andrey_chertolyas
+

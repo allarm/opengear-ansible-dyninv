@@ -1,0 +1,89 @@
+---
+# Collect information about Opengear models and software versions to a csv file 
+
+- hosts: row
+  connection: paramiko
+  gather_facts: no
+  vars:
+    output_path: "{{ inventory_dir }}/files"
+    filename: "opengear_facts_{{ date }}.csv"
+    csv_header: "hostname,model,version,hash"
+    dyninv_input_csv: "dyninv_input.csv"
+
+  tasks:
+    - name: Get Date for folder creation
+      set_fact: 
+        date:
+          "{{lookup('pipe','date +%Y%m%d_%H%M')}}"
+      tags: date_stamp
+      run_once: true
+
+    - name: Check if CSV file exists
+      stat: 
+        path:
+          "{{ output_path }}/{{ filename }}"
+      delegate_to: localhost
+      register: file_stat
+
+    - name: Backup the CSV file
+      local_action: command mv {{ output_path }}/{{ filename }} {{ output_path }}/{{ filename }}.bak
+      when: file_stat.stat.exists
+
+    - name: Initialize the CSV file
+      lineinfile:
+        dest: "{{ output_path }}/{{ filename }}"
+        line: "{{ csv_header }}"
+        backup: true
+        create: yes
+        state: present
+      run_once: true
+      delegate_to: localhost
+
+    - name: Initialize the dyninv CSV file
+      lineinfile:
+        dest: "{{ output_path }}/{{ dyninv_input_csv }}"
+        line: "{{ csv_header }}"
+        backup: true
+        create: yes
+        state: present
+      run_once: true
+      delegate_to: localhost
+
+    - name: Get a version string
+      raw: "cat /etc/version"
+      register: result
+
+    - set_fact:
+        result_txt : "{{ result.stdout_lines[0] }}"
+
+    - name: Print strings
+      debug:
+        msg: "Raw: {{ result.stdout_lines }}; result_txt: {{ result_txt }}"
+        verbosity: 1
+
+    - name: Parse the version string
+      set_fact:
+        opengear_vars:
+          "{{ inventory_hostname }},{{ result_txt.split(' ')[0].strip() }},{{ result_txt.split(' ')[2].strip() }},{{ result_txt.split(' ')[3].strip() }}"
+
+    - name: Print debug
+      debug:
+        msg: "{{ opengear_vars }}"
+
+    - name: Append the CSV file
+      lineinfile:
+        dest: "{{ output_path }}/{{ filename }}"
+        line: "{{ opengear_vars }}"
+        backup: no
+        create: no
+        state: present
+      delegate_to: localhost
+
+    - name: Append the dyninv CSV file
+      lineinfile:
+        dest: "{{ output_path }}/{{ dyninv_input_csv }}"
+        line: "{{ opengear_vars }}"
+        backup: no
+        create: no
+        state: present
+      delegate_to: localhost

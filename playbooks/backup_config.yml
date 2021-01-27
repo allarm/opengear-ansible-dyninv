@@ -1,0 +1,51 @@
+---
+- name: Backup configuration - use --ask-pass to ask for password
+  hosts: emea
+  connection: paramiko
+  gather_facts: no
+  
+  tasks:
+    - set_fact:
+      # srv_path: "/var/tmp/"
+      # It is not needed to sudo when removing from the home directory
+        srv_path: ""
+        srv_file_name: "{{ inventory_hostname }}.opg"
+
+    - set_fact:
+        srv_full_path: "{{ srv_path }}{{ srv_file_name }}"
+
+    - debug:
+        msg: "srv_path: {{ srv_path }}, srv_file_name: {{ srv_file_name }}, srv_full_path: {{ srv_full_path }} "
+        
+        #    - meta: end_play
+
+    - name: Remove the existing configuration backup file from Opengear device 
+      # Slow due to some misconfig on Opengear side
+      #      raw: "sudo rm -f {{ srv_full_path }}"
+      raw: "rm -f {{ srv_full_path }}"
+
+    - name: Create a configuration backup
+      raw: "config -e {{ srv_full_path }}"
+      register: result
+
+    #- name: Copy configuration to localhost
+      #local_action: command /usr/bin/scp andrey_chertolyas@{{ inventory_hostname }}:/var/tmp/{{ inventory_hostname }}.opg /Users/achertolyas/git/ansible/opengear_ansible/files
+      #
+    - name: Copy configuratoin to localhost using FTP
+      raw: "curl -T {{ srv_full_path }} ftp://{{ ftp_ip }} --user {{ ftp_user }}:{{ ftp_password }}"
+      register: ftp_copy_result
+
+    - name: Check md5 sum on server
+      raw: "md5sum {{ srv_full_path }}"
+      register: md5sum_server
+
+    - name: Check md5 sum locally
+      local_action: command md5 ../files/{{ srv_file_name }}
+      register: md5sum_local
+
+    - debug:
+        msg: "md5 of {{ srv_file_name }}: (server) {{ md5sum_server }} (local) {{ md5sum_local }}"
+
+    - name: Remove the configuration backup on server
+      raw: "rm -f {{ srv_full_path }}"
+

@@ -1,0 +1,2 @@
+ansible_ssh_user: ssh_user
+ftp_ip: 10.20.30.41
