@@ -149,7 +149,7 @@ hhh1
 
 
 ###############################################################################
-# HRL
+# GROUP_A
 ###############################################################################
 
 [aaa2]
@@ -163,17 +163,12 @@ bbb4-nts[01:02].example.org
 # Putting it all together
 ###############################################################################
 
-[hrl:children]
+[group_a:children]
 aaa2
 bbb4
 
-[row:children]
+[group_b:children]
 pppc
 emea
 us
-
-
-#[hrl:vars]
-#ansible_user=a_andrey_chertolyas
-#ansible_paramiko_user=a_andrey_chertolyas
 

@@ -11,19 +11,23 @@
 
 I am using a directory-based inventory - static hosts file with a dynamic inventory script. To fetch the `csv` file for dynamic inventory script, you will need to run the `get_version.yml` play first.
 
-### Static groups
+## Basic run 
+
+This will show the OpenGear software versions:
 
 ```bash
 ansible-playbook -i inventory/ playbooks/show_version.yml --extra-vars "ansible_ssh_user=username" -k
 ```
+
+### Static groups
 
 `File`: inventory/hosts
 
 - lab (xxx1 nts)
 - All site codes (xxx1, bbb4, etc)
 - Regional groups (pppc, us, emea)
-- Group A (pppc+emea+us)
-- Group B (aaa2, bbb4)
+- group_a (aaa2, bbb4)
+- group_b (the rest)
 
 ### Dynamic groups
 
