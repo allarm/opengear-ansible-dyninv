@@ -45,7 +45,7 @@ It allows to apply the chages to particular groups of devices, only. For instanc
 
 Example of the inventory output:
 
-#+BEGIN_SRC json
+```json
 {
   "ACM700x": [
     "eee2-nts01.example.org"
@@ -71,7 +71,7 @@ Example of the inventory output:
     "ccc2-nts3.example.org",
     "ccc2-nts2.example.org"
   ],
-  #+END_SRC
+```
 
 
 ## Playbooks
