@@ -9,7 +9,7 @@
 
 ## Inventory
 
-I am using a directory-beeed inventory - static hosts file with a dynamic inventory script. To fetch the `csv` file for dynamic inventory script, you will need to run the `get_version.yml` play first.
+I am using a directory-based inventory - static hosts file with a dynamic inventory script. To fetch the `csv` file for dynamic inventory script, you will need to run the `get_version.yml` play first.
 
 ### Static groups
 
